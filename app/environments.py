@@ -33,35 +33,22 @@ class EnvironmentManager:
                 pass
     
     def create_environment(self, env_id, name, cpu_limit, memory_mb, io_weight, script_content):
-        """
-        Cria e executa um novo ambiente isolado
-        
-        Args:
-            env_id: ID do ambiente (número: 1, 2, 3, ...)
-            name: Nome descritivo
-            cpu_limit: Limite de CPU em cores (ex: 0.5)
-            memory_mb: Limite de memória em MB
-            io_weight: Peso de I/O (100-1000)
-            script_content: Conteúdo do script bash
-        
-        Returns:
-            dict com env_id e pid
-        """
-        # 1. Criar cgroup
+        """Cria e executa um novo ambiente isolado"""
+        # Criar cgroup
         cgroup_path = self.cgroup_root / str(env_id)
         cgroup_path.mkdir(exist_ok=True)
         
-        # 2. Configurar limites de recursos
+        # Configurar limites de recursos
         self._set_cpu_limit(cgroup_path, cpu_limit)
         self._set_memory_limit(cgroup_path, memory_mb)
         self._set_io_weight(cgroup_path, io_weight)
         
-        # 3. Salvar script
+        # Salvar script
         script_path = self.base_dir / f"{env_id}.sh"
         script_path.write_text(script_content)
         script_path.chmod(0o755)
         
-        # 4. Executar processo em namespace isolado
+        # Executar processo em namespace isolado
         log_file = self.logs_dir / f"{env_id}.log"
         
         command = [
@@ -69,7 +56,7 @@ class EnvironmentManager:
             "--pid",          # Namespace de processos
             "--mount",        # Namespace de montagens
             "--uts",          # Namespace de hostname
-            "--fork",         # Fork antes de executar
+            "--fork",         # Fork
             "--mount-proc",   # Montar /proc no novo namespace
             "bash",
             str(script_path)
@@ -83,7 +70,7 @@ class EnvironmentManager:
                 preexec_fn=lambda: self._add_process_to_cgroup(cgroup_path)
             )
         
-        # 5. Salvar PID
+        # Salvar PID
         pid_file = self.base_dir / f"{env_id}.pid"
         pid_file.write_text(str(process.pid))
         

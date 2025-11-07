@@ -69,8 +69,7 @@ EOF
     systemctl enable cgroup-manager
     systemctl start cgroup-manager
     
-    echo "Acesse a aplicação em: http://192.168.56.20:8000"
-    echo "Ou via localhost: http://localhost:8000"
+    echo "Acesse a aplicação em: http://localhost:8000"
   SHELL
 end
 
