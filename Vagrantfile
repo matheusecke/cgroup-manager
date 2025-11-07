@@ -19,33 +19,34 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     set -e
     
-    echo "=== Atualizando sistema ==="
+    echo "Atualizando sistema"
     apt-get update
     apt-get upgrade -y
     
-    echo "=== Instalando Python e dependências ==="
+    echo "Instalando Python e dependências"
     apt-get install -y python3 python3-pip python3-venv
     
+    echo "Instalando stress"
     apt-get install -y stress
     
-    echo "=== Criando diretórios necessários ==="
+    echo "Criando diretórios necessários"
     mkdir -p /var/lib/cgroup-manager
     mkdir -p /var/log/cgroup-manager
     chmod 755 /var/lib/cgroup-manager
     chmod 755 /var/log/cgroup-manager
     
-    echo "=== Verificando cgroups v2 ==="
+    echo "Verificando cgroups v2"
     if [ ! -d "/sys/fs/cgroup/cgroup.controllers" ]; then
       echo "AVISO: cgroups v2 pode não estar habilitado"
     else
       echo "cgroups v2 detectado"
     fi
     
-    echo "=== Instalando dependências Python ==="
+    echo "Instalando dependências Python"
     cd /home/vagrant/app
     pip3 install -r requirements.txt
     
-    echo "=== Criando serviço systemd ==="
+    echo "Criando serviço systemd"
     cat > /etc/systemd/system/cgroup-manager.service <<'EOF'
 [Unit]
 Description=CGroup Manager API
@@ -63,7 +64,7 @@ RestartSec=3
 WantedBy=multi-user.target
 EOF
     
-    echo "=== Habilitando e iniciando serviço ==="
+    echo "Habilitando e iniciando serviço"
     systemctl daemon-reload
     systemctl enable cgroup-manager
     systemctl start cgroup-manager
