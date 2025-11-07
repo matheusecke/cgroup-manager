@@ -26,3 +26,8 @@ cgroup-manager/
 vagrant up
 ```
 
+### 2. Acessar a Interface
+
+Abra no navegador:
+
+- `http://localhost:8000`
