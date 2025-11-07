@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGroup Manager</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>CGroup Manager</h1>
+        <p>Gerenciador de ambientes isolados com cgroups e namespaces</p>
+      </header>
+
+      <section class="create-section">
+        <h2>Criar Novo Ambiente</h2>
+        <form id="createForm">
+          <div class="form-group">
+            <label for="name">Nome do Ambiente:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Meu ambiente"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cpu_limit">CPU (cores):</label>
+              <input
+                type="number"
+                id="cpu_limit"
+                name="cpu_limit"
+                min="0.1"
+                max="2.0"
+                step="0.1"
+                value="0.5"
+                required
+              />
+              <small>0.1 a 2.0 cores</small>
+            </div>
+
+            <div class="form-group">
+              <label for="memory_mb">Memória (MB):</label>
+              <input
+                type="number"
+                id="memory_mb"
+                name="memory_mb"
+                min="64"
+                max="4096"
+                step="64"
+                value="512"
+                required
+              />
+              <small>64 a 4096 MB</small>
+            </div>
+
+            <div class="form-group">
+              <label for="io_weight">I/O Weight:</label>
+              <input
+                type="number"
+                id="io_weight"
+                name="io_weight"
+                min="100"
+                max="1000"
+                step="50"
+                value="500"
+                required
+              />
+              <small>100 a 1000</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="script_content">Script Bash:</label>
+            <textarea
+              id="script_content"
+              name="script_content"
+              rows="10"
+              required
+              placeholder="#!/bin/bash&#10;echo 'Hello World'&#10;sleep 60"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Criar Ambiente</button>
+        </form>
+      </section>
+
+      <section class="list-section">
+        <div class="section-header">
+          <h2>Ambientes</h2>
+          <button class="btn btn-secondary" onclick="refreshEnvironments()">
+            Atualizar
+          </button>
+        </div>
+        <div id="environmentsList">
+          <p class="loading">Carregando...</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Modal de Logs -->
+    <div id="logsModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Logs do Ambiente</h3>
+          <span class="close" onclick="closeLogsModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <pre id="logsContent" class="logs-content">Carregando...</pre>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="refreshLogs()">
+            Atualizar
+          </button>
+          <button class="btn" onclick="closeLogsModal()">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="notifications"></div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+
+
