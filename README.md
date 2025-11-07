@@ -1,6 +1,6 @@
 # CGroup Manager
 
-Aplicação simplificada para gerenciar execução de scripts em ambientes isolados usando namespaces e cgroups.
+Aplicação de gerenciamento de execução de scripts em ambientes isolados usando namespaces e cgroups.
 
 ## Estrutura do Projeto
 
